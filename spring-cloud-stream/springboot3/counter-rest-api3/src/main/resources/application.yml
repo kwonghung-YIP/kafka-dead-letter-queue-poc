@@ -1,0 +1,11 @@
+
+server:
+  http2:
+    enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - idea

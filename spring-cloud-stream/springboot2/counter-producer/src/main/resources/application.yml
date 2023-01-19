@@ -1,0 +1,50 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        counter-out-0:
+          destination: counter
+          binder: kafka-svc
+          producer:
+            partition-count: 6
+            poller:
+              initial-delay: 5000
+              fixed-delay: 60000
+
+      binders:
+        kafka-svc:
+          type: kafka
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - idea
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          auto-add-partitions: true
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - microk8s
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: broker-service:9092
+          defaultBrokerPort: 9092
+          auto-create-topics: true
+          auto-add-partitions: true
+
+
+
+
+

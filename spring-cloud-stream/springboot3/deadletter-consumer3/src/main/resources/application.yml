@@ -1,0 +1,38 @@
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        deadletter-in-0:
+          destination: counter-dlq
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - idea
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          auto-add-partitions: true
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - microk8s
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: broker-service:9092
+          defaultBrokerPort: 9092
+          auto-create-topics: true
+          auto-add-partitions: true
+

@@ -1,0 +1,68 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+
+deploy:
+  kubectl:
+    manifests: [
+      "k8s/kafka.yaml",
+      "k8s/vm-microk8s/counter-rest-api.yaml",
+      "k8s/vm-microk8s/deadletter-consumer.yaml",
+      "k8s/vm-microk8s/counter-consumer.yaml",
+      "k8s/vm-microk8s/counter-producer.yaml"
+    ]
+portForward:
+  - resourceType: service
+    resourceName: counter-rest-api-service
+    port: 8080
+    localPort: 8080
+
+profiles:
+  - name: vm-microk8s-springboot2
+    build:
+      artifacts:
+        - image: kafka-demo/counter-rest-api
+          context: springboot2/counter-rest-api
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: kafka-demo/counter-producer
+          context: springboot2/counter-producer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: kafka-demo/counter-consumer
+          context: springboot2/counter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: kafka-demo/deadletter-consumer
+          context: springboot2/deadletter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+      insecureRegistries: ["localhost:32000"]
+
+  - name: vm-microk8s-springboot3
+    build:
+      artifacts:
+        - image: kafka-demo/counter-rest-api
+          context: springboot3/counter-rest-api3
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: kafka-demo/counter-producer
+          context: springboot3/counter-producer3
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: kafka-demo/counter-consumer
+          context: springboot3/counter-consumer3
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: kafka-demo/deadletter-consumer
+          context: springboot3/deadletter-consumer3
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+      insecureRegistries: ["localhost:32000"]

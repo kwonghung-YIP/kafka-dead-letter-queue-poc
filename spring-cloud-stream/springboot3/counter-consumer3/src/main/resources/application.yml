@@ -1,0 +1,78 @@
+spring:
+  main:
+    web-application-type: none
+
+  cloud:
+    function:
+      definition: consume
+    stream:
+      bindings:
+        # Reference (Spring Cloud Stream - Common Binding Properties)
+        # https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_common_binding_properties
+        consume-in-0:
+          destination: counter
+          group: poc-group
+          #error-handler-definition: myErrorHandler
+          # Reference (Sping Cloud Stream - Consumer Properties)
+          # https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_consumer_properties
+          consumer:
+            default-retryable: true
+            max-attempts: 2
+
+
+      kafka:
+        # Reference (Kafka Binder Properties)
+        # https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream-binder-kafka.html#kafka-binder-properties
+        #binder:
+        #consumer-properties:
+        #configuration:
+        #commit-log-level: debug
+
+        bindings:
+          # Reference (Kafka Consumer Properties)
+          # https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream-binder-kafka.html#kafka-consumer-properties
+          consume-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: counter-dlq
+              configuration:
+                commit-log-level: debug
+
+logging:
+  level:
+    org.springframework.kafka: debug
+    org.springframework.messaging: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - idea
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          auto-add-partitions: true
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - microk8s
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: broker-service:9092
+          defaultBrokerPort: 9092
+          auto-create-topics: true
+          auto-add-partitions: true
+
+
+
+
