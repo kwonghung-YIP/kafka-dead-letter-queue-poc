@@ -1,15 +1,6 @@
 apiVersion: skaffold/v2beta29
 kind: Config
 
-deploy:
-  kubectl:
-    manifests: [
-      "k8s/kafka.yaml",
-      "k8s/vm-microk8s/counter-rest-api.yaml",
-      "k8s/vm-microk8s/deadletter-consumer.yaml",
-      "k8s/vm-microk8s/counter-consumer.yaml",
-      "k8s/vm-microk8s/counter-producer.yaml"
-    ]
 portForward:
   - resourceType: service
     resourceName: counter-rest-api-service
@@ -17,52 +8,141 @@ portForward:
     localPort: 8080
 
 profiles:
-  - name: vm-microk8s-springboot2
+  - name: mac-microk8s-sb2
     build:
       artifacts:
-        - image: kafka-demo/counter-rest-api
-          context: springboot2/counter-rest-api
+        - image: hungbugni/counter-rest-api
+          context: springboot2/sb2-scs-counter-rest-api
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:11-latest
-        - image: kafka-demo/counter-producer
-          context: springboot2/counter-producer
+        - image: hungbugni/counter-producer
+          context: springboot2/sb2-scs-counter-producer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:11-latest
-        - image: kafka-demo/counter-consumer
-          context: springboot2/counter-consumer
+        - image: hungbugni/counter-consumer
+          context: springboot2/sb2-scs-counter-consumer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:11-latest
-        - image: kafka-demo/deadletter-consumer
-          context: springboot2/deadletter-consumer
+        - image: hungbugni/deadletter-consumer
+          context: springboot2/sb2-scs-deadletter-consumer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:11-latest
       insecureRegistries: ["localhost:32000"]
 
-  - name: vm-microk8s-springboot3
+    deploy:
+      kubectl:
+        manifests: [
+          "k8s/mac-microk8s/kafka.yaml",
+          "k8s/mac-microk8s/counter-rest-api.yaml",
+          "k8s/mac-microk8s/deadletter-consumer.yaml",
+          "k8s/mac-microk8s/counter-consumer.yaml",
+          "k8s/mac-microk8s/counter-producer.yaml"
+        ]
+
+  - name: mac-microk8s-sb3
     build:
       artifacts:
-        - image: kafka-demo/counter-rest-api
-          context: springboot3/counter-rest-api3
+        - image: hungbugni/counter-rest-api
+          context: springboot3/sb3-scs-counter-rest-api
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:17-latest
-        - image: kafka-demo/counter-producer
-          context: springboot3/counter-producer3
+        - image: hungbugni/counter-producer
+          context: springboot3/sb3-scs-counter-producer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:17-latest
-        - image: kafka-demo/counter-consumer
-          context: springboot3/counter-consumer3
+        - image: hungbugni/counter-consumer
+          context: springboot3/sb3-scs-counter-consumer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:17-latest
-        - image: kafka-demo/deadletter-consumer
-          context: springboot3/deadletter-consumer3
+        - image: hungbhgni/deadletter-consumer
+          context: springboot3/sb3-scs-deadletter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+
+    deploy:
+      kubectl:
+        manifests: [
+          "k8s/mac-microk8s/kafka.yaml",
+          "k8s/mac-microk8s/counter-rest-api.yaml",
+          "k8s/mac-microk8s/deadletter-consumer.yaml",
+          "k8s/mac-microk8s/counter-consumer.yaml",
+          "k8s/mac-microk8s/counter-producer.yaml"
+        ]
+
+  - name: vm-microk8s-sb2
+    build:
+      artifacts:
+        - image: hungbugni/counter-rest-api
+          context: springboot2/sb2-scs-counter-rest-api
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: hungbugni/counter-producer
+          context: springboot2/sb2-scs-counter-producer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: hungbugni/counter-consumer
+          context: springboot2/sb2-scs-counter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+        - image: hungbugni/deadletter-consumer
+          context: springboot2/sb2-scs-deadletter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:11-latest
+      insecureRegistries: ["localhost:32000"]
+
+    deploy:
+      kubectl:
+        manifests: [
+          "k8s/vm-microk8s/kafka.yaml",
+          "k8s/vm-microk8s/counter-rest-api.yaml",
+          "k8s/vm-microk8s/deadletter-consumer.yaml",
+          "k8s/vm-microk8s/counter-consumer.yaml",
+          "k8s/vm-microk8s/counter-producer.yaml"
+        ]
+
+  - name: vm-microk8s-sb3
+    build:
+      artifacts:
+        - image: hungbugni/counter-rest-api
+          context: springboot3/sb3-scs-counter-rest-api
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbugni/counter-producer
+          context: springboot3/sb3-scs-counter-producer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbugni/counter-consumer
+          context: springboot3/sb3-scs-counter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbhgni/deadletter-consumer
+          context: springboot3/sb3-scs-deadletter-consumer
           jib:
             type: maven
             fromImage: azul/zulu-openjdk:17-latest
       insecureRegistries: ["localhost:32000"]
+
+    deploy:
+      kubectl:
+        manifests: [
+          "k8s/vm-microk8s/kafka.yaml",
+          "k8s/vm-microk8s/counter-rest-api.yaml",
+          "k8s/vm-microk8s/deadletter-consumer.yaml",
+          "k8s/vm-microk8s/counter-consumer.yaml",
+          "k8s/vm-microk8s/counter-producer.yaml"
+        ]

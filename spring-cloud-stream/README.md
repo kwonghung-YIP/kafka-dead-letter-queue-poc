@@ -1,29 +1,38 @@
 ```bash
 skaffold build \
-  --profile="vm-microk8s-springboot2" \
+  --profile="vm-microk8s-sb3" \
   --skip-tests=true \
   --default-repo="localhost:32000"
 ```
 
 ```bash  
 skaffold dev \
-  --profile="vm-microk8s-springboot2" \
+  --profile="mac-microk8s-sb2" \
+  --skip-tests=true \
+  --tail=false \
+  --port-forward=user
+```
+
+```bash  
+skaffold dev \
+  --profile="mac-microk8s-sb3" \
+  --skip-tests=true \
+  --tail=false \
+  --port-forward=user
+```
+
+```bash  
+skaffold dev \
+  --profile="vm-microk8s-sb2" \
   --skip-tests=true \
   --default-repo="localhost:32000" \
   --tail=false \
   --port-forward=user
 ```
 
-```bash
-skaffold build \
-  --profile="vm-microk8s-springboot3" \
-  --skip-tests=true \
-  --default-repo="localhost:32000"
-```
-
 ```bash  
 skaffold dev \
-  --profile="vm-microk8s-springboot3" \
+  --profile="vm-microk8s-sb3" \
   --skip-tests=true \
   --default-repo="localhost:32000" \
   --tail=false \

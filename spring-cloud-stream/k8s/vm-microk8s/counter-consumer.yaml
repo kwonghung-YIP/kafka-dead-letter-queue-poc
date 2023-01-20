@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: springboot
-        image: kafka-demo/counter-consumer
+        image: hungbugni/counter-consumer
         resources:
           requests:
             memory: "32Mi"

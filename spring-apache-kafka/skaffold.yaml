@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+
+portForward:
+  - resourceType: service
+    resourceName: counter-rest-api-service
+    port: 8080
+    localPort: 8080
+
+profiles:
+  - name: vm-microk8s-sb3
+    build:
+      artifacts:
+        - image: hungbugni/counter-rest-api
+          context: springboot3/sb3-sak-counter-rest-api
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbugni/deadletter-consumer
+          context: springboot3/sb3-sak-deadletter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbugni/counter-producer
+          context: springboot3/sb3-sak-counter-producer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+        - image: hungbugni/counter-consumer
+          context: springboot3/sb3-sak-counter-consumer
+          jib:
+            type: maven
+            fromImage: azul/zulu-openjdk:17-latest
+      insecureRegistries: [ "localhost:32000" ]
+
+    deploy:
+      kubectl:
+        manifests: [
+          "k8s/vm-microk8s/kafka.yaml",
+          "k8s/vm-microk8s/counter-rest-api.yaml",
+          "k8s/vm-microk8s/counter-producer.yaml",
+          "k8s/vm-microk8s/counter-consumer.yaml"
+        ]
